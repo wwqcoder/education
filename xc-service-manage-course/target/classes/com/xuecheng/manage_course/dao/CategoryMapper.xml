@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xuecheng.manage_course.dao.CategoryMapper">
+
+    <resultMap id="CategoryMap" type="com.xuecheng.framework.domain.course.ext.CategoryNode">
+        <id property="id" column="one_id"/>
+        <result property="name" column="one_name"/>
+        <result property="label" column="one_label"/>
+        <result property="isshow" column="one_isshow"/>
+        <result property="isleaf" column="one_isleaf"/>
+        <result property="orderby" column="one_orderby"/>
+        <result property="parentid" column="one_parentid"/>
+        <!--ofType属性：泛型里面的类全名-->
+        <collection property="children"
+                    ofType="com.xuecheng.framework.domain.course.ext.CategoryNode">
+            <id property="id" column="two_id"/>
+            <result property="name" column="two_name"/>
+            <result property="label" column="two_label"/>
+            <result property="isshow" column="two_isshow"/>
+            <result property="isleaf" column="two_isleaf"/>
+            <result property="orderby" column="two_orderby"/>
+            <result property="parentid" column="two_parentid"/>
+            <collection property="children"
+                        ofType="com.xuecheng.framework.domain.course.ext.CategoryNode">
+                <id property="id" column="three_id"/>
+                <result property="name" column="three_name"/>
+                <result property="label" column="three_label"/>
+                <result property="isshow" column="three_isshow"/>
+                <result property="isleaf" column="three_isleaf"/>
+                <result property="orderby" column="three_orderby"/>
+                <result property="parentid" column="three_parentid"/>
+            </collection>
+        </collection>
+    </resultMap>
+    <select id="selectList" resultMap="CategoryMap">
+        SELECT
+            c1.id one_id,
+            c1.`name` one_name,
+            c1.label one_label,
+            c1.isshow one_isshow,
+            c1.isleaf one_isleaf,
+            c1.orderby one_orderby,
+            c1.parentid one_parentid,
+            c2.id two_id,
+            c2.`name` two_name,
+            c2.label two_label,
+            c2.isshow two_isshow,
+            c2.isleaf two_isleaf,
+            c2.orderby two_orderby,
+            c2.parentid two_parentid,
+            c3.id three_id,
+            c3.`name` three_name,
+            c3.label three_label,
+            c3.isshow three_isshow,
+            c3.isleaf three_isleaf,
+            c3.orderby three_orderby,
+            c3.parentid three_parentid
+        FROM
+            category c1
+        LEFT JOIN category c2 ON c2.parentid = c1.id
+        LEFT JOIN category c3 ON c3.parentid = c2.id
+        WHERE
+            c1.parentid = '0'
+        ORDER BY
+            c1.orderby,
+            c2.orderby,
+            c3.orderby
+
+    </select>
+</mapper>
